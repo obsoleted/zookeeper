@@ -847,6 +847,11 @@ public class Leader extends LearnerMaster {
         //new configuration
         Proposal.QuorumVerifierAcksetPair newQVAcksetPair = reconfigProposal.qvAcksetPairs.get(reconfigProposal.qvAcksetPairs.size() - 1);
 
+        LOG.warn("QV: {}", newQVAcksetPair.getQuorumVerifier());
+        LOG.warn("VotingMembers: {}", newQVAcksetPair.getQuorumVerifier().getVotingMembers());
+        LOG.warn("OwnAddr: {}", newQVAcksetPair.getQuorumVerifier().getVotingMembers().get(self.getId()).addr);
+        LOG.warn("Self QAddr: {}", self.getQuorumAddress());
+
         //check if I'm in the new configuration with the same quorum address -
         // if so, I'll remain the leader
         if (newQVAcksetPair.getQuorumVerifier().getVotingMembers().containsKey(self.getId())
@@ -941,6 +946,9 @@ public class Leader extends LearnerMaster {
             self.processReconfig(newQV, designatedLeader, zk.getZxid(), true);
 
             if (designatedLeader != self.getId()) {
+                LOG.warn("Not designated leader. Not allowed to commit. designatedLeader: {}, self: {}",
+                        designatedLeader,
+                        self.getId());
                 allowedToCommit = false;
             }
 
@@ -1515,6 +1523,9 @@ public class Leader extends LearnerMaster {
 
         self.processReconfig(newQV, designatedLeader, zk.getZxid(), true);
         if (designatedLeader != self.getId()) {
+            LOG.warn("Not designated leader. Not allowed to commit. designatedLeader: {}, self: {}",
+                    designatedLeader,
+                    self.getId());
             allowedToCommit = false;
         }
 
