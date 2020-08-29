@@ -642,7 +642,9 @@ public class Leader extends LearnerMaster {
             }
 
             newLeaderProposal.addQuorumVerifier(self.getQuorumVerifier());
-            if (self.getLastSeenQuorumVerifier().getVersion() > self.getQuorumVerifier().getVersion()) {
+            // Only allow new QV if reconfiguration is enabled otherwise use static config
+            if (QuorumPeerConfig.isReconfigEnabled() &&
+                    self.getLastSeenQuorumVerifier().getVersion() > self.getQuorumVerifier().getVersion()) {
                 newLeaderProposal.addQuorumVerifier(self.getLastSeenQuorumVerifier());
             }
 

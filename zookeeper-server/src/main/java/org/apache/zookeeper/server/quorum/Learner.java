@@ -675,7 +675,8 @@ public class Learner {
                 case Leader.NEWLEADER: // Getting NEWLEADER here instead of in discovery
                     // means this is Zab 1.0
                     LOG.info("Learner received NEWLEADER message");
-                    if (qp.getData() != null && qp.getData().length > 1) {
+                    // Only update QuorumVerifier if reconfig is enabled, otherwise trust current config
+                    if (QuorumPeerConfig.isReconfigEnabled() && qp.getData() != null && qp.getData().length > 1) {
                         try {
                             QuorumVerifier qv = self.configFromString(new String(qp.getData()));
                             self.setLastSeenQuorumVerifier(qv, true);
